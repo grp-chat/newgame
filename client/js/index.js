@@ -112,7 +112,7 @@ socket.on('newPositions', function (data) {
                     player.velocity.y = 0
                     //collision = true
                     //alert(collision)
-                    socket.emit('collision')
+                    //socket.emit('collision')
         
             }
     

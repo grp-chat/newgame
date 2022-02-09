@@ -19,7 +19,63 @@ console.log("Server listening at " + PORT);
 
 var SOCKET_LIST = {};
 
+//===================================================================================================
+class Boundary {
+    static width = 40
+    static height = 40
+    constructor({ position }) {
+        this.position = position
+        this.width = 40
+        this.height = 40
+    }
 
+}
+
+const map = [
+    ['-', '-', '-', '-', '-', '-', '-', '-'],
+    ['-', ' ', ' ', ' ', ' ', ' ', ' ', '-'],
+    ['-', ' ', ' ', ' ', ' ', ' ', ' ', '-'],
+    ['-', ' ', ' ', '-', '-', ' ', ' ', '-'],
+    ['-', ' ', ' ', ' ', ' ', ' ', ' ', '-'],
+    ['-', ' ', ' ', ' ', ' ', ' ', ' ', '-'],
+    ['-', '-', '-', '-', '-', '-', '-', '-']
+]
+
+const boundaries = []
+
+map.forEach((row, i) => {
+    row.forEach((symbol, j) => {
+        switch (symbol) {
+            case '-':
+                boundaries.push(new Boundary({
+                    position: {
+                        x: Boundary.width * j,
+                        y: Boundary.height * i
+                    }
+                })
+                )
+                break
+        }
+    })
+})
+
+/* function testCollision (player, boundary) {
+    if (player.y - player.radius + player.y 
+        <= boundary.position.y + boundary.height &&
+        player.x + player.radius + player.x 
+        >= boundary.position.x &&
+        player.y + player.radius + player.y 
+        >= boundary.position.y &&
+        player.x - player.radius + player.x 
+        <= boundary.position.x + boundary.width) {
+            //if collision happends
+            //collision = true
+            console.log('collision')
+            
+
+    }
+} */
+//===================================================================================================
 
 
 var Entity = function() {
@@ -34,6 +90,39 @@ var Entity = function() {
         self.updatePosition();
     }
     self.updatePosition = function() {
+        //console.log(self.x + " " + self.y)
+        if(self.x + self.spdX === 260 || self.x + self.spdX === 56 ) {
+            self.spdX = 0;  
+        } 
+        
+        if(self.y + self.spdY === 220 || self.y + self.spdY === 56) {
+            self.spdY = 0;
+            
+        } 
+        
+        if(self.y + self.spdY >= 96 && self.y + self.spdY <= 176) {
+            if(self.x + self.spdX >= 100 && self.x + self.spdX <= 224) {
+                self.spdX = 0;   
+            }
+        } 
+        
+        if(self.x + self.spdX >= 100 && self.x + self.spdX <= 224) {
+            if(self.y + self.spdY >= 96 && self.y + self.spdY <= 180) {
+                self.spdY = 0; 
+                //console.log('is this running?')
+            }
+            
+        }
+        
+        //else if(self.x + self.spdX > 100) {
+            //if(self.y >= 100 && self.y<= 184) {
+                //self.spdX = 0; 
+                //console.log('is this running?')
+            //}
+        //} else if(self.y + self.spdY >= 100) {
+            //self.spdY = 0; 
+        //}
+
         if(self.collided === false) {
         self.x += self.spdX;
         self.y += self.spdY;
@@ -58,6 +147,7 @@ var Player = function(id) {
     self.pressingLeft = false;
     self.pressingUp = false;
     self.pressingDown = false;
+    self.radius = 15;
     self.collided = false;
     self.maxSpd = 4;
 
@@ -99,7 +189,7 @@ Player.onConnect = function(socket) {
         else if(data.inputId === 'down')
             player.pressingDown = data.state;
     });
-    socket.on('collision', function() {
+    /* socket.on('collision', function() {
         
         player.collided = true;
         //player.spdX = 0;
@@ -108,7 +198,7 @@ Player.onConnect = function(socket) {
         player.collided = false;
         
         
-    });
+    }); */
     
 }
 Player.onDisconnect = function(socket) {
@@ -119,6 +209,7 @@ Player.update = function() {
     for(var i in Player.list) {
         var player = Player.list[i];
         player.update();
+        //testCollision(player, boundaries);
         pack.push({
             x:player.x,
             y:player.y,
