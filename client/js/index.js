@@ -1,11 +1,30 @@
 /* var ctx = document.getElementById("ctx").getContext("2d");
         ctx.font = '30px Arial'; */
 
+var nickname = '';
+
+    const promptMsg = () => {
+    var nick = prompt("Please enter your name:");
+    nickname = nick;
+    while (nick.length == 0) {
+        alert("Please enter your name!");
+        nick = prompt("What's your name?");
+        nickname = nick;
+    }
+
+    //sock.emit('newuser', nick);
+
+};
+
+promptMsg();
+
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 c.font = '30px Arial'
 canvas.width = innerWidth
 canvas.height = innerHeight
+
+
 
 class Boundary {
     static width = 40
@@ -28,6 +47,7 @@ class Player {
         this.velocity = velocity
         this.radius = 15
         this.id = id
+        this.name = nickname
     }
     draw() {
         c.beginPath()
@@ -35,6 +55,7 @@ class Player {
         c.fillStyle = 'yellow'
         c.fill()
         c.closePath()
+        c.strokeText(this.name, this.position.x - 8, this.position.y + 4)
     }
 }
 
@@ -77,7 +98,7 @@ var socket = io();
 
 socket.on('newPositions', function (data) {
     c.clearRect(0, 0, canvas.width, canvas.height);
-    
+
     for (var i = 0; i < data.length; i++) {
         //alert(data[i].number)
         //c.fillText(data[i].number, data[i].x, data[i].y);
@@ -99,26 +120,26 @@ socket.on('newPositions', function (data) {
         boundaries.forEach((boundary) => {
             boundary.draw()
 
-            if (player.position.y - player.radius + player.velocity.y 
+            if (player.position.y - player.radius + player.velocity.y
                 <= boundary.position.y + boundary.height &&
-                player.position.x + player.radius + player.velocity.x 
+                player.position.x + player.radius + player.velocity.x
                 >= boundary.position.x &&
-                player.position.y + player.radius + player.velocity.y 
+                player.position.y + player.radius + player.velocity.y
                 >= boundary.position.y &&
-                player.position.x - player.radius + player.velocity.x 
+                player.position.x - player.radius + player.velocity.x
                 <= boundary.position.x + boundary.width) {
-                    //if collision happends
-                    player.velocity.x = 0
-                    player.velocity.y = 0
-                    //collision = true
-                    //alert(collision)
-                    //socket.emit('collision')
-        
+                //if collision happends
+                player.velocity.x = 0
+                player.velocity.y = 0
+                //collision = true
+                //alert(collision)
+                //socket.emit('collision')
+
             }
-    
+
         })
         document.onkeydown = function (event) {
-            if (event.keyCode === 68)  
+            if (event.keyCode === 68)
                 socket.emit('keyPress', { inputId: 'right', state: true });
             else if (event.keyCode === 83)
                 socket.emit('keyPress', { inputId: 'down', state: true });
@@ -127,7 +148,7 @@ socket.on('newPositions', function (data) {
             else if (event.keyCode === 87)
                 socket.emit('keyPress', { inputId: 'up', state: true });
         }
-        
+
         document.onkeyup = function (event) {
             if (event.keyCode === 68)
                 socket.emit('keyPress', { inputId: 'right', state: false });
@@ -138,7 +159,7 @@ socket.on('newPositions', function (data) {
             else if (event.keyCode === 87)
                 socket.emit('keyPress', { inputId: 'up', state: false });
         }
-  
+
     }
 
 });

@@ -78,68 +78,50 @@ map.forEach((row, i) => {
 //===================================================================================================
 
 
-var Entity = function() {
+var Entity = function () {
     var self = {
-        x:60,
-        y:60,
-        spdX:0,
-        spdY:0,
-        id:"",
+        x: 60,
+        y: 60,
+        spdX: 0,
+        spdY: 0,
+        radius: 15,
+        id: "",
     }
-    self.update = function() {
+    self.update = function () {
         self.updatePosition();
     }
-    self.updatePosition = function() {
-        //console.log(self.x + " " + self.y)
-        if(self.x + self.spdX === 260 || self.x + self.spdX === 56 ) {
-            self.spdX = 0;  
-        } 
-        
-        if(self.y + self.spdY === 220 || self.y + self.spdY === 56) {
-            self.spdY = 0;
-            
-        } 
-        
-        if(self.y + self.spdY >= 96 && self.y + self.spdY <= 176) {
-            if(self.x + self.spdX >= 100 && self.x + self.spdX <= 224) {
-                self.spdX = 0;   
-            }
-        } 
-        
-        if(self.x + self.spdX >= 100 && self.x + self.spdX <= 224) {
-            if(self.y + self.spdY >= 96 && self.y + self.spdY <= 180) {
-                self.spdY = 0; 
-                //console.log('is this running?')
-            }
-            
-        }
-        
-        //else if(self.x + self.spdX > 100) {
-            //if(self.y >= 100 && self.y<= 184) {
-                //self.spdX = 0; 
-                //console.log('is this running?')
-            //}
-        //} else if(self.y + self.spdY >= 100) {
-            //self.spdY = 0; 
-        //}
+    self.updatePosition = function () {
 
-        if(self.collided === false) {
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
+        boundaries.forEach((boundary) => {
+
+
+            if (self.y - self.radius + self.spdY
+                <= boundary.position.y + boundary.height &&
+                self.x + self.radius + self.spdX
+                >= boundary.position.x &&
+                self.y + self.radius + self.spdY
+                >= boundary.position.y &&
+                self.x - self.radius + self.spdX
+                <= boundary.position.x + boundary.width) {
+
+                self.spdX = 0
+                self.spdY = 0
+
+
+            }
+
+        })
+
+        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         self.x += self.spdX;
         self.y += self.spdY;
-        } else { 
-            //self.spdX = 0;
-            //self.spdY = 0;
-            self.x = self.x - self.spdX;
-            self.y = self.y - self.spdY;
-            //self.x = 175;
-            //console.log(self.x);
-            //stop = false;
-        }
+
     }
     return self;
 }
 
-var Player = function(id) {
+var Player = function (id) {
     var self = Entity();
     self.id = id;
     self.number = "" + Math.floor(10 * Math.random());
@@ -152,23 +134,23 @@ var Player = function(id) {
     self.maxSpd = 4;
 
     var super_update = self.update;
-    self.update = function() {
+    self.update = function () {
         self.updateSpd();
         super_update();
     }
-   
-    self.updateSpd = function() {
-        
-        if(self.pressingRight)
+
+    self.updateSpd = function () {
+
+        if (self.pressingRight)
             self.spdX = self.maxSpd;
-        else if(self.pressingLeft)
+        else if (self.pressingLeft)
             self.spdX = -self.maxSpd;
         else
             self.spdX = 0;
 
-        if(self.pressingUp)
+        if (self.pressingUp)
             self.spdY = -self.maxSpd;
-        else if(self.pressingDown)
+        else if (self.pressingDown)
             self.spdY = self.maxSpd;
         else
             self.spdY = 0;
@@ -177,16 +159,16 @@ var Player = function(id) {
     return self;
 }
 Player.list = {};
-Player.onConnect = function(socket) {
-    var player = Player(socket.id); 
-    socket.on('keyPress', function(data){
-        if(data.inputId === 'left')
+Player.onConnect = function (socket) {
+    var player = Player(socket.id);
+    socket.on('keyPress', function (data) {
+        if (data.inputId === 'left')
             player.pressingLeft = data.state;
-        else if(data.inputId === 'right')
+        else if (data.inputId === 'right')
             player.pressingRight = data.state;
-        else if(data.inputId === 'up')
+        else if (data.inputId === 'up')
             player.pressingUp = data.state;
-        else if(data.inputId === 'down')
+        else if (data.inputId === 'down')
             player.pressingDown = data.state;
     });
     /* socket.on('collision', function() {
@@ -199,49 +181,49 @@ Player.onConnect = function(socket) {
         
         
     }); */
-    
+
 }
-Player.onDisconnect = function(socket) {
+Player.onDisconnect = function (socket) {
     delete Player.list[socket.id];
 }
-Player.update = function() {
-    var pack = [];  
-    for(var i in Player.list) {
+Player.update = function () {
+    var pack = [];
+    for (var i in Player.list) {
         var player = Player.list[i];
         player.update();
         //testCollision(player, boundaries);
         pack.push({
-            x:player.x,
-            y:player.y,
-            number:player.number,   
-            spdX:player.spdX,
-            spdY:player.spdY,
-            id:player.id
+            x: player.x,
+            y: player.y,
+            number: player.number,
+            spdX: player.spdX,
+            spdY: player.spdY,
+            id: player.id
         });
     }
     return pack;
 }
 
 var io = require('socket.io')(serv, {});
-io.sockets.on('connection', function(socket) {
+io.sockets.on('connection', function (socket) {
     socket.id = Math.random();
     SOCKET_LIST[socket.id] = socket;
 
     Player.onConnect(socket);
-    socket.on('disconnect', function(){
+    socket.on('disconnect', function () {
         delete SOCKET_LIST[socket.id];
         Player.onDisconnect(socket);
     });
-    
+
     //socket.on('collision', function(x, y){});
 });
 
-setInterval (function() {
+setInterval(function () {
     var pack = Player.update();
-    
-    for(var i in SOCKET_LIST) {
-        var socket = SOCKET_LIST[i]; 
+
+    for (var i in SOCKET_LIST) {
+        var socket = SOCKET_LIST[i];
         socket.emit('newPositions', pack);
     }
-    
-},1000/25);
+
+}, 1000 / 25);
