@@ -17,6 +17,7 @@ app.use(express.static(clientPath));
 serv.listen(PORT);
 console.log("Server listening at " + PORT);
 
+var newuser;
 var SOCKET_LIST = {};
 
 //===================================================================================================
@@ -86,6 +87,7 @@ var Entity = function () {
         spdY: 0,
         radius: 15,
         id: "",
+        //nickname: "adeline"
     }
     self.update = function () {
         self.updatePosition();
@@ -132,6 +134,7 @@ var Player = function (id) {
     self.radius = 15;
     self.collided = false;
     self.maxSpd = 4;
+    self.nickname = "";
 
     var super_update = self.update;
     self.update = function () {
@@ -161,6 +164,9 @@ var Player = function (id) {
 Player.list = {};
 Player.onConnect = function (socket) {
     var player = Player(socket.id);
+    socket.on('newuser', function(data) {
+        player.nickname = data;
+    });
     socket.on('keyPress', function (data) {
         if (data.inputId === 'left')
             player.pressingLeft = data.state;
@@ -198,10 +204,14 @@ Player.update = function () {
             number: player.number,
             spdX: player.spdX,
             spdY: player.spdY,
-            id: player.id
+            id: player.id,
+            nick: player.nickname
         });
+        //console.log(newuser);
     }
+    
     return pack;
+    
 }
 
 var io = require('socket.io')(serv, {});

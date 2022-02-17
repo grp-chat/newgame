@@ -3,6 +3,7 @@
 
 var nickname = '';
 
+
     const promptMsg = () => {
     var nick = prompt("Please enter your name:");
     nickname = nick;
@@ -12,12 +13,14 @@ var nickname = '';
         nickname = nick;
     }
 
-    //sock.emit('newuser', nick);
+    
 
 };
 
 promptMsg();
 
+
+//........................................................................................
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 c.font = '30px Arial'
@@ -42,12 +45,12 @@ class Boundary {
 }
 
 class Player {
-    constructor({ position, velocity, id }) {
+    constructor({ position, velocity, id, name }) {
         this.position = position
         this.velocity = velocity
         this.radius = 15
         this.id = id
-        this.name = nickname
+        this.name = name
     }
     draw() {
         c.beginPath()
@@ -55,7 +58,7 @@ class Player {
         c.fillStyle = 'yellow'
         c.fill()
         c.closePath()
-        c.strokeText(this.name, this.position.x - 8, this.position.y + 4)
+        c.strokeText(this.name, this.position.x - 12, this.position.y + 4)
     }
 }
 
@@ -95,6 +98,7 @@ map.forEach((row, i) => {
 
 var collision = false;
 var socket = io();
+socket.emit('newuser', nickname);
 
 socket.on('newPositions', function (data) {
     c.clearRect(0, 0, canvas.width, canvas.height);
@@ -113,7 +117,8 @@ socket.on('newPositions', function (data) {
                 y: data[i].spdY
 
             },
-            id: data[i].id
+            id: data[i].id,
+            name: data[i].nick
         })
 
         player.draw()
