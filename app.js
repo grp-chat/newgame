@@ -18,6 +18,7 @@ serv.listen(PORT);
 console.log("Server listening at " + PORT);
 
 var newuser;
+var miliseconds = 0;
 var SOCKET_LIST = {};
 
 //===================================================================================================
@@ -135,6 +136,7 @@ var Player = function (id) {
     self.collided = false;
     self.maxSpd = 4;
     self.nickname = "";
+    self.timer = 0
 
     var super_update = self.update;
     self.update = function () {
@@ -205,9 +207,12 @@ Player.update = function () {
             spdX: player.spdX,
             spdY: player.spdY,
             id: player.id,
-            nick: player.nickname
+            nick: player.nickname,
+            timer: player.timer
         });
         //console.log(newuser);
+        //console.log(player.timer);
+        player.timer += 40;
     }
     
     return pack;
@@ -235,5 +240,12 @@ setInterval(function () {
         var socket = SOCKET_LIST[i];
         socket.emit('newPositions', pack);
     }
+    
 
 }, 1000 / 25);
+
+/* const myFunc = () => {
+    console.log("5 seconds past");
+};
+
+setTimeout(myFunc, 5000); */

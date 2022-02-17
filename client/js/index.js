@@ -45,20 +45,24 @@ class Boundary {
 }
 
 class Player {
-    constructor({ position, velocity, id, name }) {
+    constructor({ position, velocity, id, name, timer }) {
         this.position = position
         this.velocity = velocity
         this.radius = 15
         this.id = id
         this.name = name
+        this.timer = timer
+        
     }
     draw() {
+        var secs = this.timer.toString()
         c.beginPath()
         c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
         c.fillStyle = 'yellow'
         c.fill()
         c.closePath()
         c.strokeText(this.name, this.position.x - 12, this.position.y + 4)
+        c.fillText(secs.substring(0,2), 1300, 650)
     }
 }
 
@@ -118,7 +122,8 @@ socket.on('newPositions', function (data) {
 
             },
             id: data[i].id,
-            name: data[i].nick
+            name: data[i].nick,
+            timer: data[i].timer
         })
 
         player.draw()
