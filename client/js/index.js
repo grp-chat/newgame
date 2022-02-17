@@ -62,7 +62,7 @@ class Player {
         c.fill()
         c.closePath()
         c.strokeText(this.name, this.position.x - 12, this.position.y + 4)
-        c.fillText(secs.substring(0,2), 1300, 650)
+        c.fillText(secs.substring(0,2), 1000, 500)
     }
 }
 
