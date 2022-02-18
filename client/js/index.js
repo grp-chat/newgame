@@ -6,6 +6,10 @@ var pinNumber = 0;
 var correctPin = false;
 var secs = 0;
 
+setInterval(() => {
+    secs++;
+}, 1000);
+
 
     const promptMsg = () => {
     var nick = prompt("Please enter your pin number:");
@@ -88,6 +92,7 @@ class Player {
         c.closePath()
         c.strokeText(this.name, this.position.x - 12, this.position.y + 4)
         //c.fillText(secs.substring(0,2), 1000, 500)
+        c.fillText(secs, 1000, 500)
     }
 }
 
