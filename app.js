@@ -241,7 +241,7 @@ setInterval(function () {
         socket.emit('newPositions', pack);
         socket.emit('timer', miliseconds);
     }
-    miliseconds += 40;
+    //miliseconds += 40;
     //console.log(miliseconds);
     
 
