@@ -80,14 +80,14 @@ class Player {
         
     }
     draw() {
-        secs = secs.toString()
+        //secs = secs.toString()
         c.beginPath()
         c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
         c.fillStyle = 'yellow'
         c.fill()
         c.closePath()
         c.strokeText(this.name, this.position.x - 12, this.position.y + 4)
-        c.fillText(secs.substring(0,2), 1000, 500)
+        //c.fillText(secs.substring(0,2), 1000, 500)
     }
 }
 
@@ -128,10 +128,10 @@ map.forEach((row, i) => {
 var collision = false;
 var socket = io();
 socket.emit('newuser', nickname);
-socket.on('timer', function(data) {
+/* socket.on('timer', function(data) {
     secs = data;
     
-});
+}); */
 
 
 socket.on('newPositions', function (data) {

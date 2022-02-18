@@ -239,7 +239,7 @@ setInterval(function () {
     for (var i in SOCKET_LIST) {
         var socket = SOCKET_LIST[i];
         socket.emit('newPositions', pack);
-        socket.emit('timer', miliseconds);
+        //socket.emit('timer', miliseconds);
     }
     //miliseconds += 40;
     //console.log(miliseconds);
