@@ -74,11 +74,11 @@ class Boundary {
 }
 
 class Player {
-    constructor({ position, velocity, id, name, /* timer */ }) {
+    constructor({ position, velocity, name, /* timer */ }) {
         this.position = position
         this.velocity = velocity
         this.radius = 15
-        this.id = id
+        //this.id = id
         this.name = name
         //this.timer = timer
         

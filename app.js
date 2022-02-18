@@ -206,7 +206,7 @@ Player.update = function () {
             number: player.number,
             spdX: player.spdX,
             spdY: player.spdY,
-            id: player.id,
+            //id: player.id,
             nick: player.nickname,
             //timer: player.timer
         });
