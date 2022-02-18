@@ -2,19 +2,44 @@
         ctx.font = '30px Arial'; */
 
 var nickname = '';
+var pinNumber = 0;
+var correctPin = false;
+var secs = 0;
 
 
     const promptMsg = () => {
-    var nick = prompt("Please enter your name:");
-    nickname = nick;
+    var nick = prompt("Please enter your pin number:");
     while (nick.length == 0) {
-        alert("Please enter your name!");
-        nick = prompt("What's your name?");
-        nickname = nick;
+        alert("Please enter your pin number!");
+        nick = prompt("Please enter your pin number:");
     }
 
     
-
+    if (nick === '9852') {
+        nickname = 'LK';
+        correctPin = true;
+    } else if (nick === '9035') {
+        nickname = 'LXR'
+        correctPin = true;
+    } else if (nick === '6588') {
+        nickname = 'TJY'
+        correctPin = true;
+    } else if (nick === '1072') {
+        nickname = 'JL'
+        correctPin = true;
+    } else if (nick === '3839') {
+        nickname = 'SZF'
+        correctPin = true;
+    } else if (nick === '88888') {
+        nickname = 'TCR'
+        correctPin = true;
+    } else if (nick === '3583') {
+        nickname = 'JHA'
+        correctPin = true;
+    } else {
+        alert("Wrong pin number!");
+        promptMsg();
+    }
 };
 
 promptMsg();
@@ -45,17 +70,17 @@ class Boundary {
 }
 
 class Player {
-    constructor({ position, velocity, id, name, timer }) {
+    constructor({ position, velocity, id, name, /* timer */ }) {
         this.position = position
         this.velocity = velocity
         this.radius = 15
         this.id = id
         this.name = name
-        this.timer = timer
+        //this.timer = timer
         
     }
     draw() {
-        var secs = this.timer.toString()
+        secs = secs.toString()
         c.beginPath()
         c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
         c.fillStyle = 'yellow'
@@ -103,6 +128,11 @@ map.forEach((row, i) => {
 var collision = false;
 var socket = io();
 socket.emit('newuser', nickname);
+socket.on('timer', function(data) {
+    secs = data;
+    
+});
+
 
 socket.on('newPositions', function (data) {
     c.clearRect(0, 0, canvas.width, canvas.height);
@@ -123,7 +153,7 @@ socket.on('newPositions', function (data) {
             },
             id: data[i].id,
             name: data[i].nick,
-            timer: data[i].timer
+            //timer: data[i].timer
         })
 
         player.draw()

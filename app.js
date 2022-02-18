@@ -208,11 +208,11 @@ Player.update = function () {
             spdY: player.spdY,
             id: player.id,
             nick: player.nickname,
-            timer: player.timer
+            //timer: player.timer
         });
         //console.log(newuser);
         //console.log(player.timer);
-        player.timer += 40;
+        //player.timer += 40;
     }
     
     return pack;
@@ -239,7 +239,10 @@ setInterval(function () {
     for (var i in SOCKET_LIST) {
         var socket = SOCKET_LIST[i];
         socket.emit('newPositions', pack);
+        socket.emit('timer', miliseconds);
     }
+    miliseconds += 40;
+    //console.log(miliseconds);
     
 
 }, 1000 / 25);
