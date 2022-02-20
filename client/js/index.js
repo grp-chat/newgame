@@ -40,6 +40,18 @@ setInterval(() => {
     } else if (nick === '3583') {
         nickname = 'JHA'
         correctPin = true;
+    } else if (nick === '5086') {
+        nickname = 'CED'
+    } else if (nick === '2105') {
+        nickname = 'CJH'
+    } else if (nick === '2167') {
+        nickname = 'KX'
+    } else if (nick === '7051') {
+        nickname = 'KN'
+    } else if (nick === '1198') {
+        nickname = 'LOK'
+    } else if (nick === '7089') {
+        nickname = 'JW'
     } else {
         alert("Wrong pin number!");
         promptMsg();
