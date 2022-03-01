@@ -141,10 +141,6 @@ map.forEach((row, i) => {
 
 //===============================================================================================
 
-
-
-
-var collision = false;
 var socket = io();
 socket.emit('newuser', nickname);
 /* socket.on('timer', function(data) {
